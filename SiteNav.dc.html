@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+  @keyframes swMark { 0%, 100% { transform: scale(0.95); } 50% { transform: scale(1.06); } }
+</style>
+</helmet>
+<header style="position: sticky; top: 0; z-index: 50; background: rgba(245,242,236,0.94); backdrop-filter: blur(12px); border-bottom: 1px solid #DFD9CF; font-family: 'Instrument Sans', Helvetica, Arial, sans-serif">
+  <div style="max-width: 1400px; margin: 0 auto; padding: 13px clamp(16px, 5vw, 30px); display: flex; align-items: center; justify-content: space-between; gap: 24px">
+    <a href="Sky Warriors Home.dc.html" style="display: flex; align-items: center; gap: 13px; color: #0C1725; text-decoration: none">
+      <img data-sw-anim="" src="sw-crest.png" alt="Sky Warriors Flight School" style="width: 58px; height: 42px; object-fit: contain; flex: none; animation: swMark 5.5s ease-in-out infinite; will-change: transform">
+      <span style="display: grid; gap: 3px">
+        <span style="font-size: 17px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; line-height: 1">Sky Warriors</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; color: #43596E; line-height: 1">Flight School USA</span>
+      </span>
+    </a>
+
+    <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+      <nav style="display: flex; align-items: center; gap: 16px; font-size: 13.5px; font-weight: 500">
+        <sc-for list="{{ links }}" as="n" hint-placeholder-count="9">
+          <a href="{{ n.href }}" style="color: {{ n.color }}; white-space: nowrap; text-decoration: none; padding-bottom: 2px; border-bottom: 2px solid {{ n.rule }}" style-hover="color: #B7182B">{{ n.label }}</a>
+        </sc-for>
+        <a href="https://www.flightcircle.com/shop/d8cad97071df/4000034243" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 9px; padding: 12px 20px; background: #B7182B; color: #FFFFFF; font-size: 13.5px; font-weight: 600; white-space: nowrap; text-decoration: none" style-hover="background: #0C1725; color: #FFFFFF">Book a flight</a>
+      </nav>
+    </sc-if>
+    <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; align-items: center; gap: 10px">
+        <button type="button" onClick="{{ toggleMenu }}" aria-label="Menu" style="width: 44px; height: 44px; display: grid; place-items: center; background: none; border: 1px solid #C9C2B6; color: #0C1725; font-size: 17px; cursor: pointer; flex: none" style-hover="border-color: #0C1725; background: #EBE6DD">{{ burgerSign }}</button>
+      </div>
+    </sc-if>
+  </div>
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="display: grid; border-top: 1px solid #DFD9CF; background: #F5F2EC">
+      <sc-for list="{{ links }}" as="n" hint-placeholder-count="9">
+        <a href="{{ n.href }}" style="padding: 16px clamp(16px, 5vw, 30px); border-bottom: 1px solid #E7E1D7; color: {{ n.color }}; font-size: 15px; font-weight: 500; text-decoration: none" style-hover="background: #EBE6DD; color: #B7182B">{{ n.label }}</a>
+      </sc-for>
+    </div>
+  </sc-if>
+</header>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;active&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { compact: false, menu: false };
+
+  componentDidMount() {
+    this._sync = () => {
+      const compact = window.innerWidth < 1180;
+      if (compact !== this.state.compact) this.setState({ compact, menu: false });
+    };
+    this._sync();
+    window.addEventListener("resize", this._sync);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this._sync);
+  }
+
+  renderVals() {
+    const active = this.props.active ?? "";
+    const pages = [
+      ["Sky Warriors Home.dc.html", "Home"],
+      ["Discovery Flight.dc.html", "Discovery"],
+      ["Training Programs.dc.html", "Programs"],
+      ["fleet.html", "Fleet"],
+      ["Meet The Team.dc.html", "Team"],
+      ["Join Sky Warriors.dc.html", "Join us"],
+      ["faqs.html", "FAQs"],
+      ["Cost Estimator.dc.html", "Cost Estimator Tool"],
+      ["contact.html", "Contact"]
+    ];
+    return {
+      wide: !this.state.compact,
+      narrow: this.state.compact,
+      menuOpen: this.state.compact && this.state.menu,
+      burgerSign: this.state.menu ? "\u2715" : "\u2630",
+      toggleMenu: () => this.setState(s => ({ menu: !s.menu })),
+      links: pages.map(([href, label]) => ({
+        href: encodeURI(href),
+        label,
+        color: label === active ? "#B7182B" : "#33465A",
+        rule: label === active ? "#B7182B" : "transparent"
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>
