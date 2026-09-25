@@ -70,10 +70,11 @@ class Component extends DCLogic {
     const pages = [
       ["Sky Warriors Home.dc.html", "Home"],
       ["Discovery Flight.dc.html", "Discovery"],
-      ["Training Programs.dc.html", "Programs"],
+      ["Training Programs.dc.html", "Flight Training Programs", "Programs"],
       ["fleet", "Fleet"],
       ["Meet The Team.dc.html", "Team"],
       ["Join Sky Warriors.dc.html", "Join us"],
+      ["financing", "Financing Pilot Training", "Financing"],
       ["faqs", "FAQs"],
       ["Cost Estimator.dc.html", "Cost Estimator Tool"],
       ["contact", "Contact"]
@@ -84,11 +85,11 @@ class Component extends DCLogic {
       menuOpen: this.state.compact && this.state.menu,
       burgerSign: this.state.menu ? "\u2715" : "\u2630",
       toggleMenu: () => this.setState(s => ({ menu: !s.menu })),
-      links: pages.map(([href, label]) => ({
+      links: pages.map(([href, label, key]) => ({
         href: encodeURI(href),
         label,
-        color: label === active ? "#B7182B" : "#33465A",
-        rule: label === active ? "#B7182B" : "transparent"
+        color: (label === active || key === active) ? "#B7182B" : "#33465A",
+        rule: (label === active || key === active) ? "#B7182B" : "transparent"
       }))
     };
   }
