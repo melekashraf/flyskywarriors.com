@@ -182,12 +182,13 @@
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
 class Component extends DCLogic {
   PROGRAMS = {
-    PPL: { label: "Private", ac: 70, ins: 80, ours: 15430, note: "our Cessna 152 estimate of $15,430" },
-    IFR: { label: "Instrument", ac: 40, ins: 50, ours: 10510, note: "our IFR finish estimate of $10,510" },
-    CPL: { label: "Commercial", ac: 20, ins: 25, ours: 5630, note: "our Commercial estimate of $5,630" },
-    CFI: { label: "CFI", ac: 20, ins: 30, ours: 6080, note: "our CFI estimate of $6,080" },
-    CFII: { label: "CFII", ac: 20, ins: 25, ours: 5630, note: "our CFII estimate of $5,630" }
+    PPL: { label: "Private", ac: 70, aatd: 0, ins: 78, acRate: 129, insRate: 85, ours: 15660, note: "our Cessna 152 estimate of $15,660" },
+    IFR: { label: "Instrument", ac: 30, aatd: 15, ins: 56.5, acRate: 169, insRate: 85, ours: 10997.5, note: "our Standard IFR estimate of $10,997" },
+    CPL: { label: "Commercial", ac: 20, aatd: 0, ins: 28, acRate: 169, insRate: 90, ours: 5900, note: "our Commercial estimate of $5,900" },
+    CFI: { label: "CFI", ac: 20, aatd: 0, ins: 30, acRate: 169, insRate: 90, ours: 6080, note: "our CFI estimate of $6,080" },
+    CFII: { label: "CFII", ac: 15, aatd: 5, ins: 28, acRate: 169, insRate: 90, ours: 5430, note: "our CFII estimate of $5,430" }
   };
+  AATD_RATE = 75;
   AIRCRAFT = [
     { name: "Cessna 152", rate: 129 },
     { name: "Piper Archer", rate: 159 },
@@ -195,15 +196,15 @@ class Component extends DCLogic {
   ];
 
   EXTRAS = [
-    { id: "checkride", label: "FAA checkride fee", cost: 1000, note: "Examiner fee, typically $1,000 to $1,500" },
+    { id: "checkride", label: "FAA checkride fee", cost: 1200, note: "Designated pilot examiner fee" },
     { id: "written", label: "FAA written test", cost: 175, note: "Testing centre fee" },
-    { id: "headset", label: "Aviation headset", cost: 400, note: "Entry-level noise cancelling" },
+    { id: "headset", label: "Aviation headset", cost: 800, note: "Noise cancelling headset, $200 to $800" },
     { id: "ipad", label: "iPad and app subscription", cost: 550, note: "Tablet plus a year of ForeFlight" },
-    { id: "charts", label: "Charts and plotter", cost: 80, note: "Sectional, plotter, E6B and kneeboard" },
-    { id: "medical", label: "Medical certificate exam", cost: 150, note: "FAA aviation medical examiner fee" }
+    { id: "charts", label: "Charts and plotter", cost: 100, note: "Sectional, plotter, E6B and kneeboard" },
+    { id: "medical", label: "Medical certificate exam", cost: 190, note: "FAA aviation medical examiner fee" }
   ];
 
-  state = { prog: "PPL", acRate: 129, acHours: 70, insRate: 80, insHours: 80, extras: { checkride: true, written: true, headset: false, ipad: false, charts: false, medical: true } };
+  state = { prog: "PPL", acRate: 129, acHours: 70, aatdHours: 0, insRate: 85, insHours: 78, extras: { checkride: true, written: true, headset: false, ipad: false, charts: false, medical: true } };
 
   set(k) {
     return e => {
@@ -220,10 +221,11 @@ class Component extends DCLogic {
     const s = this.state, P = this.PROGRAMS[s.prog];
     const acTotal = s.acRate * s.acHours;
     const insTotal = s.insRate * s.insHours;
+    const aatdTotal = this.AATD_RATE * (s.aatdHours || 0);
     const chosen = this.EXTRAS.filter(e => s.extras[e.id]);
     const exTotal = chosen.reduce((n, e) => n + e.cost, 0);
-    const total = acTotal + insTotal + exTotal;
-    const diff = (acTotal + insTotal) - P.ours;
+    const total = acTotal + aatdTotal + insTotal + exTotal;
+    const diff = (acTotal + aatdTotal + insTotal) - P.ours;
     const pick = (bg, fg, border) => ({ bg, fg, border });
     const on = pick("#0C1725", "#FFFFFF", "#0C1725"), off = pick("#FFFFFF", "#43596E", "#DFD9CF");
 
@@ -234,7 +236,7 @@ class Component extends DCLogic {
           label: this.PROGRAMS[k].label, ...st,
           pick: () => {
             const p = this.PROGRAMS[k];
-            this.setState({ prog: k, acHours: p.ac, insHours: p.ins });
+            this.setState({ prog: k, acHours: p.ac, aatdHours: p.aatd, insHours: p.ins, acRate: p.acRate, insRate: p.insRate });
           }
         };
       }),
@@ -245,14 +247,16 @@ class Component extends DCLogic {
       fields: [
         { id: "acRate", label: "Aircraft rate", prefix: "$", suffix: "/hr", value: s.acRate, min: 90, max: 300, step: 1, onInput: this.set("acRate"), hint: "Our fleet runs $129 to $169 an hour, fuel included." },
         { id: "acHours", label: "Aircraft hours", prefix: "", suffix: "hrs", value: s.acHours, min: 10, max: 150, step: 1, onInput: this.set("acHours"), hint: "The FAA minimum for a private certificate is 40. Most students fly 70 to 80." },
-        { id: "insRate", label: "Instructor rate", prefix: "$", suffix: "/hr", value: s.insRate, min: 40, max: 150, step: 1, onInput: this.set("insRate"), hint: "Our instructors are $80 to $95 an hour depending on the rating." },
-        { id: "insHours", label: "Instruction hours", prefix: "", suffix: "hrs", value: s.insHours, min: 10, max: 160, step: 1, onInput: this.set("insHours"), hint: "Flight and ground instruction combined. Ground is usually a third of it." }
+        { id: "aatdHours", label: "AATD simulator hours", prefix: "", suffix: "hrs", value: s.aatdHours || 0, min: 0, max: 40, step: 1, onInput: this.set("aatdHours"), hint: "FAA approved AATD at $75 an hour. Used in Instrument and CFII training." },
+        { id: "insRate", label: "Instructor rate", prefix: "$", suffix: "/hr", value: s.insRate, min: 40, max: 150, step: 1, onInput: this.set("insRate"), hint: "Our instructors are $85 to $90 an hour depending on the rating." },
+        { id: "insHours", label: "Instruction hours", prefix: "", suffix: "hrs", value: s.insHours, min: 10, max: 160, step: 0.5, onInput: this.set("insHours"), hint: "Flight instruction, briefings and checkride prep combined." }
       ],
       resultLabel: P.label + " estimate",
       total: this.money(total),
-      perHour: s.acHours > 0 ? this.money((acTotal + insTotal) / s.acHours) : "$0",
+      perHour: s.acHours > 0 ? this.money((acTotal + aatdTotal + insTotal) / s.acHours) : "$0",
       lines: [
         { label: "Aircraft rental", amount: this.money(acTotal), math: s.acHours + " hrs \u00d7 $" + s.acRate },
+        { label: "AATD simulator", amount: this.money(aatdTotal), math: (s.aatdHours || 0) + " hrs \u00d7 $" + this.AATD_RATE },
         { label: "Instruction", amount: this.money(insTotal), math: s.insHours + " hrs \u00d7 $" + s.insRate },
         { label: "Materials and fees", amount: this.money(exTotal), math: chosen.length ? chosen.map(e => e.label).join(", ") : "None selected" }
       ],
@@ -270,7 +274,7 @@ class Component extends DCLogic {
         : diff > 0
           ? this.money(diff) + " above " + P.note + "."
           : this.money(-diff) + " below " + P.note + ".",
-      reset: () => this.setState({ prog: "PPL", acRate: 129, acHours: 70, insRate: 80, insHours: 80, extras: { checkride: true, written: true, headset: false, ipad: false, charts: false, medical: true } })
+      reset: () => this.setState({ prog: "PPL", acRate: 129, acHours: 70, aatdHours: 0, insRate: 85, insHours: 78, extras: { checkride: true, written: true, headset: false, ipad: false, charts: false, medical: true } })
     };
   }
 }
