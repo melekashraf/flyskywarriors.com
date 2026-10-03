@@ -55,7 +55,7 @@
 
   <section style="position: relative; background: #0C1725; color: #F5F2EC; isolation: isolate; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr)">
     <div style="position: absolute; inset: -5%; z-index: -3; overflow: hidden">
-      <div data-sw-anim="" style="position: absolute; inset: 0; background-color: #0C1725; background-image: url('https://skywarriors.us/Fleet/6.jpeg'); background-size: cover; background-position: center 55%; animation: swDrift 40s ease-in-out infinite alternate; will-change: transform"></div>
+      <div data-sw-anim="" style="position: absolute; inset: 0; background-color: #0C1725; background-image: url('n7073g-ramp.jpg'); background-size: cover; background-position: center 55%; animation: swDrift 40s ease-in-out infinite alternate; will-change: transform"></div>
     </div>
     <div style="position: absolute; inset: 0; z-index: -2; background: linear-gradient(100deg, rgba(12,23,37,0.94) 0%, rgba(12,23,37,0.76) 50%, rgba(12,23,37,0.44) 100%)"></div>
     <div style="position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(12,23,37,0.4) 0%, transparent 40%, rgba(12,23,37,0.9) 100%)"></div>
@@ -66,9 +66,9 @@
         <span>Our fleet</span>
       </div>
       <h1 style="font-size: clamp(34px, 5.4vw, 76px); line-height: 0.98; font-weight: 700; letter-spacing: -0.04em; color: #FFFFFF; max-width: 20ch; text-shadow: 0 3px 40px rgba(9,18,31,0.7)">Flight Training Aircraft From $129/Hour</h1>
-      <p style="font-size: clamp(16px, 1.6vw, 20px); line-height: 1.6; color: #DCE4EC; max-width: min(52ch, 100%); text-shadow: 0 2px 20px rgba(9,18,31,0.6)">Five well-maintained Cessna and Piper aircraft with modern avionics, from a basic-panel 152 to a TAA 172 with a two-axis autopilot.</p>
+      <p style="font-size: clamp(16px, 1.6vw, 20px); line-height: 1.6; color: #DCE4EC; max-width: min(52ch, 100%); text-shadow: 0 2px 20px rgba(9,18,31,0.6)">Six well-maintained Cessna and Piper aircraft with modern avionics, from a basic-panel 152 to a TAA 172 with a two-axis autopilot.</p>
       <div style="display: flex; flex-wrap: wrap; gap: clamp(20px, 3vw, 44px); padding-top: 8px; font-family: 'IBM Plex Mono', monospace; font-size: clamp(9.5px, 1vw, 11px); letter-spacing: 0.16em; text-transform: uppercase; color: #A9BACC">
-        <span>5 aircraft</span>
+        <span>6 aircraft</span>
         <span>From $129 / hour</span>
         <span>Hayward Executive &middot; KHWD</span>
       </div>
@@ -121,7 +121,6 @@
 
   <section style="padding: clamp(30px, 4vw, 50px) clamp(16px, 5vw, 30px) clamp(54px, 8vw, 100px); background: #F5F2EC">
     <div style="max-width: 1400px; margin: 0 auto; display: grid; gap: clamp(20px, 2.6vw, 32px)">
-      <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: #7D91A6">Coming soon</div>
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); background: #FFFFFF; border: 1px solid #DFD9CF">
         <div style="position: relative; min-height: clamp(220px, 26vw, 300px); background: #0C1725">
           <img src="sim-aatd.jpeg" alt="Sky Warriors FAA approved AATD flight simulator with dual Garmin G5 displays, GTN 750 and GTN 650 navigators" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block">
@@ -135,6 +134,10 @@
             <span style="padding: 7px 13px; background: #F0ECE4; border: 1px solid #DFD9CF; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #223547">GTN 750</span>
             <span style="padding: 7px 13px; background: #F0ECE4; border: 1px solid #DFD9CF; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #223547">GTN 650</span>
             <span style="padding: 7px 13px; background: #F0ECE4; border: 1px solid #DFD9CF; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #223547">Autopilot</span>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 10px; padding-top: 4px; border-top: 2px solid #0C1725; margin-top: 4px">
+            <span style="font-size: clamp(26px, 2.8vw, 36px); font-weight: 700; letter-spacing: -0.03em; padding-top: 14px">$75</span>
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #43596E">per hour</span>
           </div>
         </div>
       </div>
@@ -177,7 +180,6 @@ class Component extends DCLogic {
   }
 
   renderVals() {
-    const P = "https://skywarriors.us/Fleet/";
     const open = src => () => this.setState({ shot: src });
     const close = () => this.setState({ shot: this.BLANK });
     const decorate = list => list.map(a => ({
@@ -190,11 +192,12 @@ class Component extends DCLogic {
       lightboxOpen: this.state.shot !== this.BLANK,
       closeShot: close,
       aircraft: decorate([
-        { tail: "N7073G", model: "Cessna 172", role: "IFR trainer \u00b7 TAA", rate: "$169", photo: P + "6.jpeg", thumbs: [P + "4.jpeg", P + "5.jpeg", P + "7.jpeg"], specs: ["Garmin 650", "Dual G5", "Two-axis autopilot", "TAA"] },
-        { tail: "N6695M", model: "Cessna 172", role: "IFR trainer", rate: "$169", photo: P + "3.jpeg", thumbs: [P + "1.jpeg", P + "2.jpeg", P + "9.jpeg"], specs: ["Garmin GNX375 GPS", "Dual G5", "Dual GNC215 COM/NAV"] },
-        { tail: "N20543", model: "Cessna 172", role: "IFR trainer", rate: "$169", photo: P + "14.jpeg", thumbs: [P + "15.jpeg", P + "16.jpeg", P + "17.jpeg"], specs: ["Garmin 650", "Dual G5"] },
-        { tail: "N40062", model: "Piper PA-28-181", role: "Archer \u00b7 IFR capable", rate: "$159", photo: P + "11.jpeg", thumbs: [], specs: ["Basic IFR panel", "Dual COM/NAV"] },
-        { tail: "N47053", model: "Cessna 152", role: "VFR trainer \u00b7 lowest rate", rate: "$129", photo: P + "12.jpeg", thumbs: [P + "13.jpeg"], specs: ["Basic VFR panel", "Single COM/NAV"] }
+        { tail: "N7073G", model: "Cessna 172", role: "IFR trainer \u00b7 TAA", rate: "$169", photo: "n7073g-ramp.jpg", thumbs: ["n7073g-tiedown.jpg", "n7073g-panel.jpg", "n7073g-panel-angle.jpg"], specs: ["Garmin 650", "Dual G5", "Two-axis autopilot", "TAA"] },
+        { tail: "N6695M", model: "Cessna 172", role: "IFR trainer", rate: "$169", photo: "n6695m-ramp.jpg", thumbs: ["n6695m-panel.jpg", "n6695m-cockpit.jpg"], specs: ["Garmin GNX375 GPS", "Dual G5", "Dual GNC215 COM/NAV"] },
+        { tail: "N20543", model: "Cessna 172", role: "IFR trainer", rate: "$169", photo: "n20543-flight.jpg", thumbs: ["n20543-cockpit.jpg"], specs: ["Garmin 650", "Dual G5"] },
+        { tail: "N84907", model: "Cessna 172", role: "IFR capable", rate: "$159", photo: "n84907-ramp.jpg", thumbs: ["n84907-cockpit.png"], specs: ["Basic IFR panel", "Dual COM/NAV"] },
+        { tail: "N40062", model: "Piper PA-28-181", role: "Archer \u00b7 IFR capable", rate: "$159", photo: "n40062-ramp.jpg", thumbs: [], specs: ["Basic IFR panel", "Dual COM/NAV"] },
+        { tail: "N47053", model: "Cessna 152", role: "VFR trainer \u00b7 lowest rate", rate: "$129", photo: "n47053-ramp.jpg", thumbs: ["n47053-panel.jpg"], specs: ["Basic VFR panel", "Single COM/NAV"] }
       ])
     };
   }
