@@ -207,7 +207,7 @@ class Component extends DCLogic {
           moreLabel: open ? "Read less" : "Read more",
           moreSign: open ? "\u2212" : "+",
           toggle: () => this.setState(st => ({ open: { ...st.open, [m.name]: !st.open[m.name] } })),
-          mailto: "mailto:info@skywarriors.us?subject=" + encodeURIComponent("Train with " + m.name)
+          mailto: "mailto:info.skywarriors@gmail.com?subject=" + encodeURIComponent("Train with " + m.name)
         };
       })
     };
